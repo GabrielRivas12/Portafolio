@@ -9,7 +9,6 @@ import {
   Linking
 } from 'react-native';
 
-// IMPORTANTE: Cambiamos la forma de importar los iconos para compatibilidad web
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 

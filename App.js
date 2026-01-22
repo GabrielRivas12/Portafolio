@@ -1,20 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import { useFonts } from 'expo-font';
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import Inicio from './src/screens/Inicio';
+import { useState, useEffect } from 'react';
+import { loadFonts } from './src/components/icons';
 
 export default function App() {
-  // Cargar fuentes de los iconos
-  const [fontsLoaded] = useFonts({
-    ...FontAwesome.font,
-    ...MaterialCommunityIcons.font,
-  });
+  const [fontsLoaded, setFontsLoaded] = useState(false);
 
-  // Mostrar un loader mientras cargan las fuentes
+  useEffect(() => {
+    loadFonts()
+      .then(() => setFontsLoaded(true))
+      .catch(err => console.error(err));
+  }, []);
+
   if (!fontsLoaded) {
     return (
-      <View style={styles.loadingContainer}>
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
         <ActivityIndicator size="large" color="#60a5fa" />
       </View>
     );
@@ -30,5 +31,4 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0f172a' },
 });
