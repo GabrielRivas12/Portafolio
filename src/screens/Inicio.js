@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -49,20 +49,20 @@ export default function Inicio() {
   };
 
   const technicalSkills = [
-    { name: 'React Native', icon: 'react', type: 'MaterialCommunityIcons', color: '#61DAFB' },
-    { name: 'JavaScript', icon: 'language-javascript', type: 'MaterialCommunityIcons', color: '#F7DF1E' },
-    { name: 'Java', icon: 'language-java', type: 'MaterialCommunityIcons', color: '#007396' },
-    { name: 'C#', icon: 'language-csharp', type: 'MaterialCommunityIcons', color: '#9B4F96' },
-    { name: '.NET', icon: 'dot-net', type: 'MaterialCommunityIcons', color: '#512BD4' },
-    { name: 'Python', icon: 'language-python', type: 'MaterialCommunityIcons', color: '#3776AB' },
-    { name: 'Spring Boot', icon: 'leaf', type: 'MaterialCommunityIcons', color: '#6DB33F' },
-    { name: 'HTML5', icon: 'language-html5', type: 'MaterialCommunityIcons', color: '#E34F26' },
-    { name: 'CSS3', icon: 'language-css3', type: 'MaterialCommunityIcons', color: '#1572B6' },
+    { name: 'React Native', icon: 'logo-react', type: 'Ionicons', color: '#61DAFB' },
+    { name: 'JavaScript', icon: 'logo-javascript', type: 'Ionicons', color: '#F7DF1E' },
+    { name: 'Java', icon: 'code-slash', type: 'Ionicons', color: '#007396' },
+    { name: 'C#', icon: 'code-slash', type: 'Ionicons', color: '#9B4F96' },
+    { name: '.NET', icon: 'code-slash', type: 'Ionicons', color: '#512BD4' },
+    { name: 'Python', icon: 'logo-python', type: 'Ionicons', color: '#3776AB' },
+    { name: 'Spring Boot', icon: 'leaf-outline', type: 'Ionicons', color: '#6DB33F' },
+    { name: 'HTML5', icon: 'logo-html5', type: 'Ionicons', color: '#E34F26' },
+    { name: 'CSS3', icon: 'logo-css3', type: 'Ionicons', color: '#1572B6' },
     { name: 'MySQL', icon: 'database', type: 'FontAwesome', color: '#336791' },
-    { name: 'SQL Server', icon: 'database-outline', type: 'MaterialCommunityIcons', color: '#4DB33D' },
+    { name: 'SQL Server', icon: 'server-outline', type: 'Ionicons', color: '#4DB33D' },
     { name: 'Git', icon: 'git', type: 'FontAwesome', color: '#F05032' },
     { name: 'Android', icon: 'android', type: 'FontAwesome', color: '#3DDC84' },
-    { name: 'Firebase', icon: 'firebase', type: 'MaterialCommunityIcons', color: '#FFCA28' },
+    { name: 'Firebase', icon: 'flame', type: 'Ionicons', color: '#FFCA28' },
   ];
 
   const projects = [
@@ -95,17 +95,16 @@ export default function Inicio() {
   const contactInfo = [
     { icon: 'envelope', type: 'FontAwesome', text: 'ejemplo@gmail.com', link: 'mailto:ejemplo@gmail.com' },
     { icon: 'phone', type: 'FontAwesome', text: '+123 456 7890', link: 'tel:+1234567890' },
-    { icon: 'linkedin', type: 'FontAwesome', text: 'linkedin.com/in/esteban', link: 'https://linkedin.com/in/esteban' },
-    { icon: 'github', type: 'FontAwesome', text: 'github.com/esteban', link: 'https://github.com/esteban' },
+    { icon: 'logo-linkedin', type: 'Ionicons', text: 'linkedin.com/in/esteban', link: 'https://linkedin.com/in/esteban' },
+    { icon: 'logo-github', type: 'Ionicons', text: 'github.com/esteban', link: 'https://github.com/esteban' },
   ];
 
-  // Función para renderizar iconos dinámicamente
   const renderIcon = (type, name, size, color) => {
     switch (type) {
       case 'FontAwesome':
         return <FontAwesome name={name} size={size} color={color} />;
-      case 'MaterialCommunityIcons':
-        return <MaterialCommunityIcons name={name} size={size} color={color} />;
+      case 'Ionicons':
+        return <Ionicons name={name} size={size} color={color} />;
       default:
         return <FontAwesome name="question-circle" size={size} color={color} />;
     }
@@ -158,10 +157,10 @@ export default function Inicio() {
 
           <View style={styles.socialContainer}>
             <TouchableOpacity onPress={() => Linking.openURL('https://linkedin.com')} style={styles.socialIcon}>
-              <FontAwesome name="linkedin" size={24} color="#ffffff" />
+              <Ionicons name="logo-linkedin" size={24} color="#ffffff" />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => Linking.openURL('https://github.com')} style={styles.socialIcon}>
-              <FontAwesome name="github" size={24} color="#ffffff" />
+              <Ionicons name="logo-github" size={24} color="#ffffff" />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => Linking.openURL('mailto:ejemplo@gmail.com')} style={styles.socialIcon}>
               <FontAwesome name="envelope" size={24} color="#ffffff" />
@@ -277,7 +276,7 @@ export default function Inicio() {
   );
 }
 
-// Estilos (igual que antes)
+// Estilos
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#0f172a' },
   scrollView: { flex: 1 },
@@ -346,4 +345,4 @@ const styles = StyleSheet.create({
   contactInfo: { backgroundColor: 'rgba(30, 41, 59, 0.5)', borderRadius: 16, padding: 30, marginBottom: 40, borderWidth: 1, borderColor: '#334155' },
   contactItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
   contactText: { color: '#cbd5e1', fontSize: 16, marginLeft: 15 },
-}); 
+});

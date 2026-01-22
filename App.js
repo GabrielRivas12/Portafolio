@@ -3,6 +3,7 @@ import { StyleSheet, View, ActivityIndicator, Platform } from 'react-native';
 import Inicio from './src/screens/Inicio';
 import { useState, useEffect } from 'react';
 import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -14,7 +15,7 @@ export default function App() {
         // Carga fonts desde assets en Web
         await Font.loadAsync({
           FontAwesome: require('./assets/fonts/FontAwesome.ttf'),
-          MaterialCommunityIcons: require('./assets/fonts/MaterialCommunityIcons.ttf'),
+          Ionicons: require('./assets/fonts/Ionicons.ttf'),
         });
       } else {
         // En móvil no necesitamos cargar nada
