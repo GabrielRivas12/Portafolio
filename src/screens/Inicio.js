@@ -9,8 +9,9 @@ import {
   Linking
 } from 'react-native';
 
-// Iconos compatibles con web y móvil
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+// IMPORTANTE: Cambiamos la forma de importar los iconos para compatibilidad web
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -49,52 +50,67 @@ export default function Inicio() {
   };
 
   const technicalSkills = [
-    { name: 'React Native', icon: <MaterialCommunityIcons name="react" />, color: '#61DAFB' },
-    { name: 'JavaScript', icon: <MaterialCommunityIcons name="language-javascript" />, color: '#F7DF1E' },
-    { name: 'Java', icon: <MaterialCommunityIcons name="language-java" />, color: '#007396' },
-    { name: 'C#', icon: <MaterialCommunityIcons name="language-csharp" />, color: '#9B4F96' },
-    { name: '.NET', icon: <MaterialCommunityIcons name="dot-net" />, color: '#512BD4' },
-    { name: 'Python', icon: <MaterialCommunityIcons name="language-python" />, color: '#3776AB' },
-    { name: 'Spring Boot', icon: <MaterialCommunityIcons name="leaf" />, color: '#6DB33F' },
-    { name: 'HTML5', icon: <MaterialCommunityIcons name="language-html5" />, color: '#E34F26' },
-    { name: 'CSS3', icon: <MaterialCommunityIcons name="language-css3" />, color: '#1572B6' },
-    { name: 'MySQL', icon: <FontAwesome name="database" />, color: '#336791' },
-    { name: 'SQL Server', icon: <MaterialCommunityIcons name="database-outline" />, color: '#4DB33D' },
-    { name: 'Git', icon: <FontAwesome name="git" />, color: '#F05032' },
-    { name: 'Android', icon: <FontAwesome name="android" />, color: '#3DDC84' },
-    { name: 'Firebase', icon: <MaterialCommunityIcons name="firebase" />, color: '#FFCA28' },
+    { name: 'React Native', icon: 'react', type: 'MaterialCommunityIcons', color: '#61DAFB' },
+    { name: 'JavaScript', icon: 'language-javascript', type: 'MaterialCommunityIcons', color: '#F7DF1E' },
+    { name: 'Java', icon: 'language-java', type: 'MaterialCommunityIcons', color: '#007396' },
+    { name: 'C#', icon: 'language-csharp', type: 'MaterialCommunityIcons', color: '#9B4F96' },
+    { name: '.NET', icon: 'dot-net', type: 'MaterialCommunityIcons', color: '#512BD4' },
+    { name: 'Python', icon: 'language-python', type: 'MaterialCommunityIcons', color: '#3776AB' },
+    { name: 'Spring Boot', icon: 'leaf', type: 'MaterialCommunityIcons', color: '#6DB33F' },
+    { name: 'HTML5', icon: 'language-html5', type: 'MaterialCommunityIcons', color: '#E34F26' },
+    { name: 'CSS3', icon: 'language-css3', type: 'MaterialCommunityIcons', color: '#1572B6' },
+    { name: 'MySQL', icon: 'database', type: 'FontAwesome', color: '#336791' },
+    { name: 'SQL Server', icon: 'database-outline', type: 'MaterialCommunityIcons', color: '#4DB33D' },
+    { name: 'Git', icon: 'git', type: 'FontAwesome', color: '#F05032' },
+    { name: 'Android', icon: 'android', type: 'FontAwesome', color: '#3DDC84' },
+    { name: 'Firebase', icon: 'firebase', type: 'MaterialCommunityIcons', color: '#FFCA28' },
   ];
 
   const projects = [
     {
       title: 'Banano',
       description: 'Sitio web personal con sistema solar interactivo',
-      icon: <FontAwesome name="laptop" />,
+      icon: 'laptop',
+      type: 'FontAwesome',
       color: '#3b82f6',
       tags: ['React', 'Three.js']
     },
     {
       title: 'App Móvil',
       description: 'Aplicación React Native para gestión de tareas',
-      icon: <FontAwesome name="mobile" />,
+      icon: 'mobile',
+      type: 'FontAwesome',
       color: '#10b981',
       tags: ['React Native', 'Firebase']
     },
     {
       title: 'API REST',
       description: 'Backend Spring Boot con autenticación JWT',
-      icon: <FontAwesome name="server" />,
+      icon: 'server',
+      type: 'FontAwesome',
       color: '#8b5cf6',
       tags: ['Spring Boot', 'MongoDB']
     }
   ];
 
   const contactInfo = [
-    { icon: <FontAwesome name="envelope" />, text: 'ejemplo@gmail.com', link: 'mailto:ejemplo@gmail.com' },
-    { icon: <FontAwesome name="phone" />, text: '+123 456 7890', link: 'tel:+1234567890' },
-    { icon: <FontAwesome name="linkedin" />, text: 'linkedin.com/in/esteban', link: 'https://linkedin.com/in/esteban' },
-    { icon: <FontAwesome name="github" />, text: 'github.com/esteban', link: 'https://github.com/esteban' },
+    { icon: 'envelope', type: 'FontAwesome', text: 'ejemplo@gmail.com', link: 'mailto:ejemplo@gmail.com' },
+    { icon: 'phone', type: 'FontAwesome', text: '+123 456 7890', link: 'tel:+1234567890' },
+    { icon: 'linkedin', type: 'FontAwesome', text: 'linkedin.com/in/esteban', link: 'https://linkedin.com/in/esteban' },
+    { icon: 'github', type: 'FontAwesome', text: 'github.com/esteban', link: 'https://github.com/esteban' },
   ];
+
+  // Función para renderizar iconos dinámicamente
+  const renderIcon = (type, name, size, color) => {
+    switch (type) {
+      case 'FontAwesome':
+        return <FontAwesome name={name} size={size} color={color} />;
+      case 'MaterialCommunityIcons':
+        return <MaterialCommunityIcons name={name} size={size} color={color} />;
+      default:
+        return <FontAwesome name="question-circle" size={size} color={color} />;
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -202,7 +218,7 @@ export default function Inicio() {
             <View style={styles.skillsGrid}>
               {technicalSkills.map((skill, index) => (
                 <View key={index} style={styles.skillItem}>
-                  {React.cloneElement(skill.icon, { size: 32, color: skill.color })}
+                  {renderIcon(skill.type, skill.icon, 32, skill.color)}
                   <Text style={styles.skillName}>{skill.name}</Text>
                 </View>
               ))}
@@ -221,7 +237,7 @@ export default function Inicio() {
             {projects.map((project, index) => (
               <View key={index} style={styles.projectCard}>
                 <View style={styles.projectHeader}>
-                  {React.cloneElement(project.icon, { size: 24, color: project.color })}
+                  {renderIcon(project.type, project.icon, 24, project.color)}
                   <Text style={styles.projectTitle}>{project.title}</Text>
                 </View>
                 <Text style={styles.projectDesc}>{project.description}</Text>
@@ -251,7 +267,7 @@ export default function Inicio() {
                 style={styles.contactItem}
                 onPress={() => Linking.openURL(item.link)}
               >
-                {React.cloneElement(item.icon, { size: 20, color: '#60a5fa' })}
+                {renderIcon(item.type, item.icon, 20, '#60a5fa')}
                 <Text style={styles.contactText}>{item.text}</Text>
               </TouchableOpacity>
             ))}
@@ -262,7 +278,7 @@ export default function Inicio() {
   );
 }
 
-// Estilos completos (igual que tu versión anterior)
+// Estilos (igual que antes)
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#0f172a' },
   scrollView: { flex: 1 },
@@ -331,4 +347,4 @@ const styles = StyleSheet.create({
   contactInfo: { backgroundColor: 'rgba(30, 41, 59, 0.5)', borderRadius: 16, padding: 30, marginBottom: 40, borderWidth: 1, borderColor: '#334155' },
   contactItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
   contactText: { color: '#cbd5e1', fontSize: 16, marginLeft: 15 },
-});
+}); 
