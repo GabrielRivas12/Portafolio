@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
-  Linking
+  Linking,
 } from 'react-native';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -14,20 +14,20 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const { width, height } = Dimensions.get('window');
 
-export default function Inicio() {
+export default function Inicio({ fontAwesomeLoaded, ioniconsLoaded }) {
   const scrollViewRef = useRef(null);
 
   const scrollToSection = (section) => {
     const sections = {
-      'inicio': 0,
-      'sobreMi': height * 0.7 + 100,
-      'proyectos': height * 0.7 + 1000,
-      'contacto': height * 0.7 + 1800
+      inicio: 0,
+      sobreMi: height * 0.7 + 100,
+      proyectos: height * 0.7 + 1000,
+      contacto: height * 0.7 + 1800,
     };
 
     scrollViewRef.current?.scrollTo({
       y: sections[section],
-      animated: true
+      animated: true,
     });
   };
 
@@ -48,10 +48,22 @@ export default function Inicio() {
     }
   };
 
+  const downloadCV = async () => {
+    const url =
+      'https://drive.google.com/uc?export=download&id=1WZqlk3dTxuIGNj67Doku4t_kwPspjigX';
+
+    const supported = await Linking.canOpenURL(url);
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      console.log('No se pudo abrir el link del CV');
+    }
+  };
+
   const technicalSkills = [
     { name: 'React Native', icon: 'logo-react', type: 'Ionicons', color: '#61DAFB' },
     { name: 'JavaScript', icon: 'logo-javascript', type: 'Ionicons', color: '#F7DF1E' },
-    { name: 'Java', icon: 'code-slash', type: 'Ionicons', color: '#007396' },
+    { name: 'Java', icon: 'code', type: 'FontAwesome', color: '#007396' }, // ⚠️ "Java" NO existe en FontAwesome
     { name: 'C#', icon: 'code-slash', type: 'Ionicons', color: '#9B4F96' },
     { name: '.NET', icon: 'code-slash', type: 'Ionicons', color: '#512BD4' },
     { name: 'Python', icon: 'logo-python', type: 'Ionicons', color: '#3776AB' },
@@ -72,7 +84,7 @@ export default function Inicio() {
       icon: 'laptop',
       type: 'FontAwesome',
       color: '#3b82f6',
-      tags: ['React', 'Three.js']
+      tags: ['React', 'Three.js'],
     },
     {
       title: 'App Móvil',
@@ -80,7 +92,7 @@ export default function Inicio() {
       icon: 'mobile',
       type: 'FontAwesome',
       color: '#10b981',
-      tags: ['React Native', 'Firebase']
+      tags: ['React Native', 'Firebase'],
     },
     {
       title: 'API REST',
@@ -88,8 +100,8 @@ export default function Inicio() {
       icon: 'server',
       type: 'FontAwesome',
       color: '#8b5cf6',
-      tags: ['Spring Boot', 'MongoDB']
-    }
+      tags: ['Spring Boot', 'MongoDB'],
+    },
   ];
 
   const contactInfo = [
@@ -99,15 +111,28 @@ export default function Inicio() {
     { icon: 'logo-github', type: 'Ionicons', text: 'github.com/esteban', link: 'https://github.com/esteban' },
   ];
 
+  // ✅ Render de iconos con control por fuente cargada
   const renderIcon = (type, name, size, color) => {
-    switch (type) {
-      case 'FontAwesome':
-        return <FontAwesome name={name} size={size} color={color} />;
-      case 'Ionicons':
-        return <Ionicons name={name} size={size} color={color} />;
-      default:
-        return <FontAwesome name="question-circle" size={size} color={color} />;
+    if (type === 'FontAwesome') {
+      if (!fontAwesomeLoaded) {
+        return <Text style={{ fontSize: size, color }}>⬤</Text>;
+      }
+      return <FontAwesome name={name} size={size} color={color} />;
     }
+
+    if (type === 'Ionicons') {
+      if (!ioniconsLoaded) {
+        return <Text style={{ fontSize: size, color }}>⬤</Text>;
+      }
+      return <Ionicons name={name} size={size} color={color} />;
+    }
+
+    // fallback
+    if (fontAwesomeLoaded) {
+      return <FontAwesome name="question-circle" size={size} color={color} />;
+    }
+
+    return <Text style={{ fontSize: size, color }}>?</Text>;
   };
 
   return (
@@ -144,10 +169,11 @@ export default function Inicio() {
           </Text>
 
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.primaryButton}>
+            <TouchableOpacity style={styles.primaryButton} onPress={downloadCV}>
               <Text style={styles.buttonText}>Descargar CV</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+
+            <TouchableOpacity
               style={styles.secondaryButton}
               onPress={() => scrollToSection('contacto')}
             >
@@ -156,14 +182,25 @@ export default function Inicio() {
           </View>
 
           <View style={styles.socialContainer}>
-            <TouchableOpacity onPress={() => Linking.openURL('https://linkedin.com')} style={styles.socialIcon}>
-              <Ionicons name="logo-linkedin" size={24} color="#ffffff" />
+            <TouchableOpacity
+              onPress={() => Linking.openURL('https://linkedin.com')}
+              style={styles.socialIcon}
+            >
+              {renderIcon('Ionicons', 'logo-linkedin', 24, '#ffffff')}
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => Linking.openURL('https://github.com')} style={styles.socialIcon}>
-              <Ionicons name="logo-github" size={24} color="#ffffff" />
+
+            <TouchableOpacity
+              onPress={() => Linking.openURL('https://github.com')}
+              style={styles.socialIcon}
+            >
+              {renderIcon('Ionicons', 'logo-github', 24, '#ffffff')}
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => Linking.openURL('mailto:ejemplo@gmail.com')} style={styles.socialIcon}>
-              <FontAwesome name="envelope" size={24} color="#ffffff" />
+
+            <TouchableOpacity
+              onPress={() => Linking.openURL('mailto:ejemplo@gmail.com')}
+              style={styles.socialIcon}
+            >
+              {renderIcon('FontAwesome', 'envelope', 24, '#ffffff')}
             </TouchableOpacity>
           </View>
         </View>
@@ -178,7 +215,7 @@ export default function Inicio() {
           <View style={styles.aboutCardsContainer}>
             <View style={[styles.aboutCard, styles.cardPrimary]}>
               <View style={[styles.iconBackground, { backgroundColor: 'rgba(59, 130, 246, 0.15)' }]}>
-                <FontAwesome name="user" size={28} color="#3b82f6" />
+                {renderIcon('FontAwesome', 'user', 28, '#3b82f6')}
               </View>
               <Text style={styles.cardTitle}>¿Quién soy?</Text>
               <Text style={styles.cardText}>
@@ -188,7 +225,7 @@ export default function Inicio() {
 
             <View style={[styles.aboutCard, styles.cardSecondary]}>
               <View style={[styles.iconBackground, { backgroundColor: 'rgba(16, 185, 129, 0.15)' }]}>
-                <FontAwesome name="flag" size={28} color="#10b981" />
+                {renderIcon('FontAwesome', 'flag', 28, '#10b981')}
               </View>
               <Text style={styles.cardTitle}>Mi Objetivo</Text>
               <Text style={styles.cardText}>
@@ -198,7 +235,7 @@ export default function Inicio() {
 
             <View style={[styles.aboutCard, styles.cardTertiary]}>
               <View style={[styles.iconBackground, { backgroundColor: 'rgba(139, 92, 246, 0.15)' }]}>
-                <FontAwesome name="star" size={28} color="#8b5cf6" />
+                {renderIcon('FontAwesome', 'star', 28, '#8b5cf6')}
               </View>
               <Text style={styles.cardTitle}>Mi Perfil</Text>
               <Text style={styles.cardText}>
@@ -213,6 +250,7 @@ export default function Inicio() {
             <Text style={styles.skillsDescription}>
               Tecnologías y herramientas con las que trabajo regularmente
             </Text>
+
             <View style={styles.skillsGrid}>
               {technicalSkills.map((skill, index) => (
                 <View key={index} style={styles.skillItem}>
