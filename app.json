@@ -12,18 +12,18 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-
-     "web": {
+    "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro",
       "output": "single",
       "build": {
         "babel": {
-          "include": ["react-native-vector-icons"]
+          "include": [
+            "react-native-vector-icons"
+          ]
         }
       }
     },
-
     "ios": {
       "supportsTablet": true
     },
@@ -33,6 +33,9 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true
-    }
+    },
+    "plugins": [
+      "expo-asset"
+    ]
   }
 }

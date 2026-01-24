@@ -1,15 +1,31 @@
+// src/utils/icons.js
 import * as Font from 'expo-font';
 import { Platform } from 'react-native';
 
-export const loadFonts = async () => {
-  if (Platform.OS === 'web') {
-    // Cargar fonts desde assets para web
+export const loadFontAwesome = async () => {
+  if (Platform.OS !== 'web') return true;
+
+  try {
     await Font.loadAsync({
       FontAwesome: require('../../assets/fonts/FontAwesome.ttf'),
+    });
+    return true;
+  } catch (err) {
+    console.log('❌ Error cargando FontAwesome:', err);
+    return false;
+  }
+};
+
+export const loadIonicons = async () => {
+  if (Platform.OS !== 'web') return true;
+
+  try {
+    await Font.loadAsync({
       Ionicons: require('../../assets/fonts/Ionicons.ttf'),
     });
-  } else {
-    // En móvil no necesitamos cargar nada, ya vienen con vector-icons
-    return Promise.resolve();
+    return true;
+  } catch (err) {
+    console.log('❌ Error cargando Ionicons:', err);
+    return false;
   }
 };
