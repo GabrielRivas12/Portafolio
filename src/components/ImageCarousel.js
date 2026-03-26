@@ -5,17 +5,17 @@ import {
   Image,
   TouchableOpacity,
   Modal,
-  Dimensions,
+  useWindowDimensions,
   StyleSheet,
   Text,
+  PanResponder,
 } from 'react-native';
-
-const { width, height } = Dimensions.get('window');
 
 const ImageCarousel = ({ images, style }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const scrollRef = useRef(null);
+  const { width, height } = useWindowDimensions();
 
   const itemWidth = width * (width < 768 ? 0.85 : 0.48 * 0.85);
 
@@ -59,6 +59,22 @@ const ImageCarousel = ({ images, style }) => {
     goToIndex(activeIndex + 1);
   };
 
+  // PanResponder para detectar swipes en el modal
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onPanResponderRelease: (evt, gestureState) => {
+      const { dx } = gestureState;
+      if (Math.abs(dx) > 50) { // Umbral para considerar un swipe
+        if (dx > 0) {
+          // Swipe derecha - anterior
+          setSelectedImageIndex((prev) => (prev - 1 + images.length) % images.length);
+        } else {
+          // Swipe izquierda - siguiente
+          setSelectedImageIndex((prev) => (prev + 1) % images.length);
+        }
+      }
+    },
+  });
 
   return (
     <View style={[styles.container, style]}>
@@ -110,19 +126,21 @@ const ImageCarousel = ({ images, style }) => {
             </View>
           </TouchableOpacity>
 
-          <View style={styles.modalContent}>
+          <View style={styles.modalContent} {...panResponder.panHandlers}>
             <TouchableOpacity style={styles.modalNavButton} onPress={() => setSelectedImageIndex((prev) => (prev - 1 + images.length) % images.length)}>
               <Text style={styles.modalNavText}>{'‹'}</Text>
             </TouchableOpacity>
 
-            <Image source={selectedImage} style={styles.fullImage} resizeMode="contain" />
+            <Image source={selectedImage} style={[styles.fullImage, { width: width * 0.85, height: height * 0.7 }]} resizeMode="contain" />
 
             <TouchableOpacity style={styles.modalNavButton} onPress={() => setSelectedImageIndex((prev) => (prev + 1) % images.length)}>
               <Text style={styles.modalNavText}>{'›'}</Text>
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.modalCounter}>{`${selectedImageIndex + 1} / ${images.length}`}</Text>
+          <Text style={styles.modalCounter}>
+            {selectedImageIndex !== null ? `${selectedImageIndex + 1} / ${images.length}` : ''}
+          </Text>
         </View>
       </Modal>
     </View>
@@ -174,8 +192,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   fullImage: {
-    width: width * 0.85,
-    height: height * 0.7,
     marginHorizontal: 20,
   },
   modalContent: {

@@ -1,15 +1,14 @@
-import React, { useRef, useState } from 'react';
+﻿import React, { useRef, useState } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
   TouchableOpacity,
-  Dimensions,
+  useWindowDimensions,
   Linking,
   Image
 } from 'react-native';
-import Svg, { Path, Circle, Rect, Polygon } from 'react-native-svg';
 
 // Importar iconos desde archivos separados
 import EmailIcon from '../components/icons/EmailIcon';
@@ -24,14 +23,8 @@ import ApiIcon from '../components/icons/ApiIcon';
 
 // Importar el componente del carrusel
 import ImageCarousel from '../components/ImageCarousel';
+import { getStyles } from './InicioStyles';
 
-const { width, height } = Dimensions.get('window');
-
-// Componentes de iconos SVG simples
-
-
-// Iconos para tarjetas "Sobre Mí"
-// Iconos para proyectos
 // Iconos sociales
 const LinkedinSocialIcon = ({ size = 24, color = "#ffffff" }) => (
   <LinkedinIcon size={size} color={color} />
@@ -44,6 +37,22 @@ const GithubSocialIcon = ({ size = 24, color = "#ffffff" }) => (
 const EmailSocialIcon = ({ size = 24, color = "#ffffff" }) => (
   <EmailIcon size={size} color={color} />
 );
+
+const fallbackStyles = StyleSheet.create({
+  fallbackIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#3b82f6',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  fallbackText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold'
+  }
+});
 
 const SkillIcon = ({ name, size = 40 }) => {
   const getSvgSource = (skillName) => {
@@ -96,8 +105,8 @@ const SkillIcon = ({ name, size = 40 }) => {
   }
 
   return (
-    <View style={[styles.fallbackIcon, { width: size, height: size }]}>
-      <Text style={styles.fallbackText}>{name.charAt(0)}</Text>
+    <View style={[fallbackStyles.fallbackIcon, { width: size, height: size }]}> 
+      <Text style={fallbackStyles.fallbackText}>{name.charAt(0)}</Text>
     </View>
   );
 };
@@ -134,7 +143,7 @@ const projects = [
   },
   {
     title: 'CentralCoffee Web',
-    description: 'Plataforma web de CentralCoffee desarrollada en Python con Flask para gestionar los datos de la apliación y acceso a herramientas de inteligencia artifial para la deteccion de la calidad del grano de café',
+    description: 'Plataforma web de CentralCoffee desarrollada en Python con Flask para gestionar los datos de la aplicación y acceso a herramientas de inteligencia artificial para la detección de la calidad del grano de café',
     icon: <LaptopIcon />,
     tags: ['Python', 'Firebase', 'Flask', 'Supabase', 'Teachable Machine'],
     github: 'https://github.com/GabrielRivas12/CentralCoffeeWebTestPython',
@@ -159,6 +168,9 @@ const projects = [
 export default function Inicio() {
   const scrollViewRef = useRef(null);
   const [activeSection, setActiveSection] = useState('Inicio');
+  const { width, height } = useWindowDimensions();
+
+  const styles = getStyles(width, height);
 
   // Definir las posiciones de cada sección
   const sectionPositions = {
@@ -323,7 +335,7 @@ export default function Inicio() {
                 <UserIcon />
               </View>
               <Text style={styles.cardTitle}>¿Quién soy?</Text>
-              <Text style={styles.cardText}>Soy Ingeniero en Sistemas y Desarrollador Móvil y Web con experiencia en liderazgo de grupos de trabajo para el desarrollo de proyectos de innovación. Poseo conocimientos solidos en el desarrollo de software y diseño de interfaces</Text>
+              <Text style={styles.cardText}>Soy Ingeniero en Sistemas y Desarrollador Móvil y Web con experiencia en liderazgo de grupos de trabajo para el desarrollo de proyectos de innovación. Poseo conocimientos sólidos en el desarrollo de software y diseño de interfaces</Text>
             </View>
             <View style={[styles.aboutCard, styles.cardSecondary]}>
               <View style={[styles.iconBackground, { backgroundColor: 'rgba(16, 185, 129, 0.15)' }]}>
@@ -337,7 +349,7 @@ export default function Inicio() {
                 <StarIcon />
               </View>
               <Text style={styles.cardTitle}>Mi Perfil</Text>
-              <Text style={styles.cardText}>Me caracterizo por mi capacidad detrabajar en equipo, responsabilidad, adaptación rápida a nuevas tecnologías, atención al detalle y entregar productos de calidad.</Text>
+              <Text style={styles.cardText}>Me caracterizo por mi capacidad de trabajar en equipo, responsabilidad, adaptación rápida a nuevas tecnologías, atención al detalle y entregar productos de calidad.</Text>
             </View>
           </View>
 
@@ -412,327 +424,3 @@ export default function Inicio() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0f172a'
-  },
-  scrollView: {
-    flex: 1
-  },
-  scrollContent: {
-    paddingBottom: 60
-  },
-
-  navbar: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 30,
-    paddingVertical: 20,
-    backgroundColor: 'rgba(15, 23, 42, 0.95)',
-    borderBottomWidth: 1,
-    borderBottomColor: '#1e293b',
-    zIndex: 1000,
-  },
-  navLinks: {
-    flexDirection: 'row'
-  },
-  navButton: {
-    marginLeft: 25,
-    alignItems: 'center',
-  },
-  navItem: {
-    color: '#94a3b8',
-    fontSize: 15,
-    fontWeight: '600',
-    paddingVertical: 8,
-    paddingHorizontal: 5
-  },
-  activeNavItem: {
-    color: '#60a5fa',
-  },
-  activeIndicator: {
-    position: 'absolute',
-    bottom: -2,
-    width: '80%',
-    height: 2,
-    backgroundColor: '#60a5fa',
-    borderRadius: 1,
-  },
-
-  heroContainer: {
-    paddingHorizontal: 30,
-    paddingTop: 40,
-    paddingBottom: 80,
-    minHeight: height * 0.8,
-    justifyContent: 'center'
-  },
-  greeting: {
-    color: '#60a5fa',
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 10
-  },
-  title: {
-    color: '#f8fafc',
-    fontSize: 42,
-    fontWeight: '800',
-    marginBottom: 20
-  },
-  description: {
-    color: '#cbd5e1',
-    fontSize: 18,
-    marginBottom: 40,
-    maxWidth: 600
-  },
-
-  buttonContainer: {
-    flexDirection: 'row',
-    marginBottom: 50
-  },
-  primaryButton: {
-    backgroundColor: '#3b82f6',
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 12,
-    marginRight: 20
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600'
-  },
-  secondaryButton: {
-    backgroundColor: 'transparent',
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#3b82f6'
-  },
-  secondaryButtonText: {
-    color: '#3b82f6',
-    fontSize: 16,
-    fontWeight: '600'
-  },
-
-  socialContainer: {
-    flexDirection: 'row',
-    marginBottom: 60
-  },
-  socialIcon: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: 'rgba(59,130,246,0.1)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 20
-  },
-
-  section: {
-    paddingHorizontal: 30,
-    paddingVertical: 60
-  },
-  sectionHeader: {
-    marginBottom: 50,
-    alignItems: 'center'
-  },
-  sectionSubtitle: {
-    color: '#60a5fa',
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 8
-  },
-  sectionTitle: {
-    color: '#f8fafc',
-    fontSize: 36,
-    fontWeight: '800',
-    marginBottom: 12,
-    textAlign: 'center'
-  },
-
-  aboutCardsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap'
-  },
-  aboutCard: {
-    width: width < 768 ? '100%' : '30%',
-    backgroundColor: 'rgba(30,41,59,0.8)',
-    borderRadius: 20,
-    padding: 30,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#334155',
-    alignItems: 'center'
-  },
-  cardPrimary: {
-    borderColor: 'rgba(59,130,246,0.3)'
-  },
-  cardSecondary: {
-    borderColor: 'rgba(16,185,129,0.3)'
-  },
-  cardTertiary: {
-    borderColor: 'rgba(139,92,246,0.3)'
-  },
-
-  iconBackground: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 15
-  },
-  cardTitle: {
-    color: '#fff',
-    fontSize: 22,
-    fontWeight: '700',
-    marginBottom: 15,
-    textAlign: 'center'
-  },
-  cardText: {
-    color: '#cbd5e1',
-    fontSize: 15,
-    textAlign: 'center'
-  },
-
-  skillsContainer: {
-    backgroundColor: 'rgba(30, 41, 59, 0.8)',
-    borderRadius: 20,
-    padding: 30,
-    borderWidth: 1,
-    borderColor: '#334155'
-  },
-  skillsTitle: {
-    color: '#fff',
-    fontSize: 24,
-    fontWeight: '700',
-    textAlign: 'center',
-    marginBottom: 10
-  },
-  skillsDescription: {
-    color: '#94a3b8',
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 30
-  },
-  skillsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center'
-  },
-  skillItem: {
-    alignItems: 'center',
-    width: width < 768 ? '25%' : '16.66%', // 6 items por fila en pantallas grandes
-    marginBottom: 30,
-    paddingHorizontal: 10
-  },
-  skillName: {
-    color: '#cbd5e1',
-    fontSize: 14,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginTop: 5
-  },
-
-  projectsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: width < 768 ? 'center' : 'space-between'
-  },
-  projectCard: {
-    width: width < 768 ? '100%' : '48%',
-    backgroundColor: 'rgba(30, 41, 59, 0.8)',
-    borderRadius: 16,
-    padding: 25,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#334155'
-  },
-  projectHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 15
-  },
-  projectTitle: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: '700',
-    marginLeft: 12
-  },
-  projectDesc: {
-    color: '#94a3b8',
-    fontSize: 15,
-    lineHeight: 22,
-    marginBottom: 20
-  },
-  carousel: {
-    marginBottom: 20,
-  },
-  projectTags: {
-    flexDirection: 'row',
-    flexWrap: 'wrap'
-  },
-  tag: {
-    backgroundColor: 'rgba(59, 130, 246, 0.15)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    marginRight: 8,
-    marginBottom: 8
-  },
-  tagText: {
-    color: '#60a5fa',
-    fontSize: 12,
-    fontWeight: '600'
-  },
-  githubButton: {
-    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-    borderWidth: 1,
-    borderColor: '#3b82f6',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 15,
-  },
-  githubButtonText: {
-    color: '#60a5fa',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-
-  contactInfo: {
-    backgroundColor: 'rgba(30, 41, 59, 0.5)',
-    borderRadius: 16,
-    padding: 30,
-    marginBottom: 40,
-    borderWidth: 1,
-    borderColor: '#334155'
-  },
-  contactItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20
-  },
-  contactText: {
-    color: '#cbd5e1',
-    fontSize: 16,
-    marginLeft: 15
-  },
-  fallbackIcon: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#3b82f6',
-    borderRadius: 20,
-  },
-  fallbackText: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold'
-  },
-});
