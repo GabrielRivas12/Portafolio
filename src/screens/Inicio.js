@@ -1,97 +1,37 @@
 import React, { useRef, useState } from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  ScrollView, 
-  TouchableOpacity, 
-  Dimensions, 
-  Linking, 
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Dimensions,
+  Linking,
   Image
 } from 'react-native';
 import Svg, { Path, Circle, Rect, Polygon } from 'react-native-svg';
 
+// Importar iconos desde archivos separados
+import EmailIcon from '../components/icons/EmailIcon';
+import LinkedinIcon from '../components/icons/LinkedinIcon';
+import GithubIcon from '../components/icons/GithubIcon';
+import UserIcon from '../components/icons/UserIcon';
+import FlagIcon from '../components/icons/FlagIcon';
+import StarIcon from '../components/icons/StarIcon';
+import LaptopIcon from '../components/icons/LaptopIcon';
+import MobileIcon from '../components/icons/MobileIcon';
+import ApiIcon from '../components/icons/ApiIcon';
+
+// Importar el componente del carrusel
+import ImageCarousel from '../components/ImageCarousel';
+
 const { width, height } = Dimensions.get('window');
 
 // Componentes de iconos SVG simples
-const EmailIcon = ({ size = 20, color = "#60a5fa" }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24">
-    <Path fill={color} d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-  </Svg>
-);
 
-const LinkedinIcon = ({ size = 20, color = "#60a5fa" }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24">
-    <Path fill={color} d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-  </Svg>
-);
-
-const GithubIcon = ({ size = 20, color = "#60a5fa" }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24">
-    <Path fill={color} d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-  </Svg>
-);
 
 // Iconos para tarjetas "Sobre Mí"
-const UserIcon = ({ size = 28, color = "#3b82f6" }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24">
-    <Circle cx="12" cy="8" r="4" fill="none" stroke={color} strokeWidth="2"/>
-    <Path fill="none" stroke={color} strokeWidth="2" d="M20,20c0-4.42-3.58-8-8-8s-8,3.58-8,8"/>
-  </Svg>
-);
-
-const FlagIcon = ({ size = 28, color = "#10b981" }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24">
-    <Path fill="none" stroke={color} strokeWidth="2" d="M5,22V4c0-1.1,0.9-2,2-2h10c1.1,0,2,0.9,2,2v18l-7-4L5,22z"/>
-  </Svg>
-);
-
-const StarIcon = ({ size = 28, color = "#8b5cf6" }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24">
-    <Polygon 
-      points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" 
-      fill="none" 
-      stroke={color} 
-      strokeWidth="2"
-    />
-  </Svg>
-);
-
 // Iconos para proyectos
-const LaptopIcon = ({ size = 24, color = "#3b82f6" }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24">
-    <Rect x="4" y="4" width="16" height="12" rx="1" fill="none" stroke={color} strokeWidth="2"/>
-    <Rect x="2" y="16" width="20" height="2" fill={color}/>
-  </Svg>
-);
-
-const MobileIcon = ({ size = 24, color = "#10b981" }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24">
-    <Rect x="6" y="2" width="12" height="20" rx="2" fill="none" stroke={color} strokeWidth="2"/>
-    <Circle cx="12" cy="19" r="1" fill={color}/>
-  </Svg>
-);
-
-const ApiIcon = ({ size = 24, color = "#8b5cf6" }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24">
-    {/* Caja principal del servidor */}
-    <Rect x="4" y="4" width="16" height="14" rx="2" fill="none" stroke={color} strokeWidth="2"/>
-    
-    {/* Líneas horizontales para representar racks/slots */}
-    <Path d="M8,8 L16,8" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
-    <Path d="M8,10.5 L16,10.5" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
-    <Path d="M8,13 L16,13" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
-    
-    {/* Indicadores de estado/luces */}
-    <Circle cx="6.5" cy="8" r="0.75" fill={color}/>
-    <Circle cx="6.5" cy="10.5" r="0.75" fill={color}/>
-    <Circle cx="6.5" cy="13" r="0.75" fill={color}/>
-    
-    {/* Ventilación en la parte superior */}
-    <Path d="M7,5 L9,5 M11,5 L13,5 M15,5 L17,5" stroke={color} strokeWidth="1" strokeLinecap="round"/>
-  </Svg>
-);
-
 // Iconos sociales
 const LinkedinSocialIcon = ({ size = 24, color = "#ffffff" }) => (
   <LinkedinIcon size={size} color={color} />
@@ -107,7 +47,7 @@ const EmailSocialIcon = ({ size = 24, color = "#ffffff" }) => (
 
 const SkillIcon = ({ name, size = 40 }) => {
   const getSvgSource = (skillName) => {
-    switch(skillName) {
+    switch (skillName) {
       case 'React Native':
       case 'React':
         return require('../../assets/svg/react.svg');
@@ -147,8 +87,8 @@ const SkillIcon = ({ name, size = 40 }) => {
 
   if (svgSource) {
     return (
-      <Image 
-        source={svgSource} 
+      <Image
+        source={svgSource}
         style={{ width: size, height: size }}
         resizeMode="contain"
       />
@@ -163,33 +103,56 @@ const SkillIcon = ({ name, size = 40 }) => {
 };
 
 const projects = [
-  { 
-    title: 'SysControl', 
-    description: 'Proyecto de gestión de inventarios y ventas con punto de venta, control de salidas de productos y generación de reportes analíticos en tiempo real.', 
-    icon: <LaptopIcon />, 
+  {
+    title: 'SysControl',
+    description: 'Proyecto de gestión de inventarios y ventas con punto de venta, control de salidas de productos y generación de reportes analíticos en tiempo real.',
+    icon: <LaptopIcon />,
     tags: ['Java', 'Swing', 'MySQL'],
-    github: 'https://github.com/GabrielRivas12/SysControl'
+    github: 'https://github.com/GabrielRivas12/SysControl',
+    images: [
+      require('../../assets/png/SysHome.png'),
+      require('../../assets/png/SysInventario.png'),
+      require('../../assets/png/SysPunto.png'),
+      require('../../assets/png/SysExistencia.png'),
+      require('../../assets/png/SysRegistro.png'),
+    ]
   },
-  { 
-    title: 'CentralCoffee Mobile', 
-    description: 'CentralCoffee es una aplicación móvil desarrollada para conectar productores y compradores de café. Los usuarios pueden explorar ofertas, visualizar perfiles, chatear, ubicar centros de acopio en el mapa y registrar la trazabilidad de su producción', 
-    icon: <MobileIcon />, 
+  {
+    title: 'CentralCoffee Mobile',
+    description: 'CentralCoffee es una aplicación móvil desarrollada para conectar productores y compradores de café. Los usuarios pueden explorar ofertas, visualizar perfiles, chatear, ubicar centros de acopio en el mapa y registrar la trazabilidad de su producción',
+    icon: <MobileIcon />,
     tags: ['React Native', 'Firebase', 'Supabase', 'Teachable Machine'],
-    github: 'https://github.com/GabrielRivas12/CentralCoffee'
+    github: 'https://github.com/GabrielRivas12/CentralCoffee',
+    images: [
+      require('../../assets/png/detallesmovil.jpg'),
+      require('../../assets/png/IAmovil.png'),
+      require('../../assets/png/mapamovil.jpg'),
+      require('../../assets/png/ofertasmovil.jpg'),
+      require('../../assets/png/chatmovil.png'),
+      require('../../assets/png/cuentamovil.jpg'),
+    ]
   },
-  { 
-    title: 'CentralCoffee Web', 
-    description: 'Plataforma web de CentralCoffee desarrollada en Python con Flask para gestionar los datos de la apliación y acceso a herramientas de inteligencia artifial para la deteccion de la calidad del grano de café', 
-    icon: <LaptopIcon />, 
+  {
+    title: 'CentralCoffee Web',
+    description: 'Plataforma web de CentralCoffee desarrollada en Python con Flask para gestionar los datos de la apliación y acceso a herramientas de inteligencia artifial para la deteccion de la calidad del grano de café',
+    icon: <LaptopIcon />,
     tags: ['Python', 'Firebase', 'Flask', 'Supabase', 'Teachable Machine'],
-    github: 'https://github.com/GabrielRivas12/CentralCoffeeWebTestPython'
+    github: 'https://github.com/GabrielRivas12/CentralCoffeeWebTestPython',
+    images: [
+      require('../../assets/png/ofertasweb.png'),
+      require('../../assets/png/mapaweb.png'),
+      require('../../assets/png/chatweb.png'),
+      require('../../assets/png/IAweb.png'),
+    ]
   },
-  { 
-    title: 'Backend Hotel API', 
-    description: 'API RESTful para sistema de gestión hotelera, que maneja reservas, habitaciones y clientes.', 
-    icon: <ApiIcon />, 
+  {
+    title: 'Backend Hotel API',
+    description: 'API RESTful para sistema de gestión hotelera, que maneja reservas, habitaciones y clientes.',
+    icon: <ApiIcon />,
     tags: ['C#', '.NET', 'SQL Server', 'API REST'],
-    github: 'https://github.com/GabrielRivas12/Backend_Hotel'
+    github: 'https://github.com/GabrielRivas12/Backend_Hotel',
+    images: [
+    ]
   },
 ];
 
@@ -216,7 +179,7 @@ export default function Inicio() {
   // Función para manejar el scroll y detectar la sección actual
   const handleScroll = (event) => {
     const offsetY = event.nativeEvent.contentOffset.y;
-    
+
     // Determinar en qué sección se encuentra el usuario
     if (offsetY < sectionPositions['Sobre Mí'] - 100) {
       setActiveSection('Inicio');
@@ -257,20 +220,20 @@ export default function Inicio() {
 
   // Tus datos reales de contacto
   const contactInfo = [
-    { 
-      icon: <EmailIcon />, 
-      text: 'gabrielmrivash@gmail.com', 
-      link: 'mailto:gabrielmrivash@gmail.com' 
+    {
+      icon: <EmailIcon />,
+      text: 'gabrielmrivash@gmail.com',
+      link: 'mailto:gabrielmrivash@gmail.com'
     },
-    { 
-      icon: <LinkedinIcon />, 
-      text: 'linkedin.com/in/gabriel-mrivas', 
-      link: 'https://www.linkedin.com/in/gabriel-mrivas/' 
+    {
+      icon: <LinkedinIcon />,
+      text: 'linkedin.com/in/gabriel-mrivas',
+      link: 'https://www.linkedin.com/in/gabriel-mrivas/'
     },
-    { 
-      icon: <GithubIcon />, 
-      text: 'github.com/GabrielRivas12', 
-      link: 'https://github.com/GabrielRivas12' 
+    {
+      icon: <GithubIcon />,
+      text: 'github.com/GabrielRivas12',
+      link: 'https://github.com/GabrielRivas12'
     },
   ];
 
@@ -280,13 +243,13 @@ export default function Inicio() {
       <View style={styles.navbar}>
         <View style={styles.navLinks}>
           {['Inicio', 'Sobre Mí', 'Proyectos', 'Contacto'].map((section) => (
-            <TouchableOpacity 
-              key={section} 
-              style={styles.navButton} 
+            <TouchableOpacity
+              key={section}
+              style={styles.navButton}
               onPress={() => scrollToSection(section)}
             >
               <Text style={[
-                styles.navItem, 
+                styles.navItem,
                 activeSection === section && styles.activeNavItem
               ]}>
                 {section}
@@ -326,20 +289,20 @@ export default function Inicio() {
           </View>
 
           <View style={styles.socialContainer}>
-            <TouchableOpacity 
-              onPress={() => Linking.openURL('https://www.linkedin.com/in/gabriel-mrivas/')} 
+            <TouchableOpacity
+              onPress={() => Linking.openURL('https://www.linkedin.com/in/gabriel-mrivas/')}
               style={styles.socialIcon}
             >
               <LinkedinSocialIcon />
             </TouchableOpacity>
-            <TouchableOpacity 
-              onPress={() => Linking.openURL('https://github.com/GabrielRivas12')} 
+            <TouchableOpacity
+              onPress={() => Linking.openURL('https://github.com/GabrielRivas12')}
               style={styles.socialIcon}
             >
               <GithubSocialIcon />
             </TouchableOpacity>
-            <TouchableOpacity 
-              onPress={() => Linking.openURL('mailto:gabrielmrivash@gmail.com')} 
+            <TouchableOpacity
+              onPress={() => Linking.openURL('mailto:gabrielmrivash@gmail.com')}
               style={styles.socialIcon}
             >
               <EmailSocialIcon />
@@ -407,6 +370,7 @@ export default function Inicio() {
                   <Text style={styles.projectTitle}>{project.title}</Text>
                 </View>
                 <Text style={styles.projectDesc}>{project.description}</Text>
+                <ImageCarousel images={project.images} style={styles.carousel} />
                 <View style={styles.projectTags}>
                   {project.tags.map((tag, i) => (
                     <View key={i} style={styles.tag}>
@@ -414,7 +378,7 @@ export default function Inicio() {
                     </View>
                   ))}
                 </View>
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.githubButton}
                   onPress={() => Linking.openURL(project.github)}
                 >
@@ -433,9 +397,9 @@ export default function Inicio() {
           </View>
           <View style={styles.contactInfo}>
             {contactInfo.map((item, index) => (
-              <TouchableOpacity 
-                key={index} 
-                style={styles.contactItem} 
+              <TouchableOpacity
+                key={index}
+                style={styles.contactItem}
                 onPress={() => Linking.openURL(item.link)}
               >
                 {item.icon}
@@ -450,44 +414,44 @@ export default function Inicio() {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: '#0f172a' 
+  container: {
+    flex: 1,
+    backgroundColor: '#0f172a'
   },
-  scrollView: { 
-    flex: 1 
+  scrollView: {
+    flex: 1
   },
-  scrollContent: { 
-    paddingBottom: 60 
+  scrollContent: {
+    paddingBottom: 60
   },
 
-  navbar: { 
-    flexDirection: 'row', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    paddingHorizontal: 30, 
-    paddingVertical: 20, 
-    backgroundColor: 'rgba(15, 23, 42, 0.95)', 
-    borderBottomWidth: 1, 
+  navbar: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+    paddingVertical: 20,
+    backgroundColor: 'rgba(15, 23, 42, 0.95)',
+    borderBottomWidth: 1,
     borderBottomColor: '#1e293b',
     zIndex: 1000,
   },
-  navLinks: { 
-    flexDirection: 'row' 
+  navLinks: {
+    flexDirection: 'row'
   },
-  navButton: { 
+  navButton: {
     marginLeft: 25,
     alignItems: 'center',
   },
-  navItem: { 
-    color: '#94a3b8', 
-    fontSize: 15, 
-    fontWeight: '600', 
-    paddingVertical: 8, 
-    paddingHorizontal: 5 
+  navItem: {
+    color: '#94a3b8',
+    fontSize: 15,
+    fontWeight: '600',
+    paddingVertical: 8,
+    paddingHorizontal: 5
   },
-  activeNavItem: { 
-    color: '#60a5fa', 
+  activeNavItem: {
+    color: '#60a5fa',
   },
   activeIndicator: {
     position: 'absolute',
@@ -498,230 +462,233 @@ const styles = StyleSheet.create({
     borderRadius: 1,
   },
 
-  heroContainer: { 
-    paddingHorizontal: 30, 
-    paddingTop: 40, 
-    paddingBottom: 80, 
-    minHeight: height * 0.8, 
-    justifyContent: 'center' 
+  heroContainer: {
+    paddingHorizontal: 30,
+    paddingTop: 40,
+    paddingBottom: 80,
+    minHeight: height * 0.8,
+    justifyContent: 'center'
   },
-  greeting: { 
-    color: '#60a5fa', 
-    fontSize: 18, 
-    fontWeight: '600', 
-    marginBottom: 10 
+  greeting: {
+    color: '#60a5fa',
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 10
   },
-  title: { 
-    color: '#f8fafc', 
-    fontSize: 42, 
-    fontWeight: '800', 
-    marginBottom: 20 
+  title: {
+    color: '#f8fafc',
+    fontSize: 42,
+    fontWeight: '800',
+    marginBottom: 20
   },
-  description: { 
-    color: '#cbd5e1', 
-    fontSize: 18, 
-    marginBottom: 40, 
-    maxWidth: 600 
-  },
-
-  buttonContainer: { 
-    flexDirection: 'row', 
-    marginBottom: 50 
-  },
-  primaryButton: { 
-    backgroundColor: '#3b82f6', 
-    paddingHorizontal: 32, 
-    paddingVertical: 16, 
-    borderRadius: 12, 
-    marginRight: 20 
-  },
-  buttonText: { 
-    color: '#fff', 
-    fontSize: 16, 
-    fontWeight: '600' 
-  },
-  secondaryButton: { 
-    backgroundColor: 'transparent', 
-    paddingHorizontal: 32, 
-    paddingVertical: 16, 
-    borderRadius: 12, 
-    borderWidth: 2, 
-    borderColor: '#3b82f6' 
-  },
-  secondaryButtonText: { 
-    color: '#3b82f6', 
-    fontSize: 16, 
-    fontWeight: '600' 
+  description: {
+    color: '#cbd5e1',
+    fontSize: 18,
+    marginBottom: 40,
+    maxWidth: 600
   },
 
-  socialContainer: { 
-    flexDirection: 'row', 
-    marginBottom: 60 
+  buttonContainer: {
+    flexDirection: 'row',
+    marginBottom: 50
   },
-  socialIcon: { 
-    width: 50, 
-    height: 50, 
-    borderRadius: 25, 
-    backgroundColor: 'rgba(59,130,246,0.1)', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    marginRight: 20 
+  primaryButton: {
+    backgroundColor: '#3b82f6',
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 12,
+    marginRight: 20
   },
-
-  section: { 
-    paddingHorizontal: 30, 
-    paddingVertical: 60 
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600'
   },
-  sectionHeader: { 
-    marginBottom: 50, 
-    alignItems: 'center' 
+  secondaryButton: {
+    backgroundColor: 'transparent',
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#3b82f6'
   },
-  sectionSubtitle: { 
-    color: '#60a5fa', 
-    fontSize: 16, 
-    fontWeight: '600', 
-    marginBottom: 8 
-  },
-  sectionTitle: { 
-    color: '#f8fafc', 
-    fontSize: 36, 
-    fontWeight: '800', 
-    marginBottom: 12, 
-    textAlign: 'center' 
+  secondaryButtonText: {
+    color: '#3b82f6',
+    fontSize: 16,
+    fontWeight: '600'
   },
 
-  aboutCardsContainer: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    flexWrap: 'wrap' 
+  socialContainer: {
+    flexDirection: 'row',
+    marginBottom: 60
   },
-  aboutCard: { 
-    width: width < 768 ? '100%' : '30%', 
-    backgroundColor: 'rgba(30,41,59,0.8)', 
-    borderRadius: 20, 
-    padding: 30, 
-    marginBottom: 20, 
-    borderWidth: 1, 
-    borderColor: '#334155', 
-    alignItems: 'center' 
-  },
-  cardPrimary: { 
-    borderColor: 'rgba(59,130,246,0.3)' 
-  },
-  cardSecondary: { 
-    borderColor: 'rgba(16,185,129,0.3)' 
-  },
-  cardTertiary: { 
-    borderColor: 'rgba(139,92,246,0.3)' 
+  socialIcon: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(59,130,246,0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 20
   },
 
-  iconBackground: { 
-    width: 70, 
-    height: 70, 
-    borderRadius: 35, 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    marginBottom: 15 
+  section: {
+    paddingHorizontal: 30,
+    paddingVertical: 60
   },
-  cardTitle: { 
-    color: '#fff', 
-    fontSize: 22, 
-    fontWeight: '700', 
-    marginBottom: 15, 
-    textAlign: 'center' 
+  sectionHeader: {
+    marginBottom: 50,
+    alignItems: 'center'
   },
-  cardText: { 
-    color: '#cbd5e1', 
-    fontSize: 15, 
-    textAlign: 'center' 
+  sectionSubtitle: {
+    color: '#60a5fa',
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 8
+  },
+  sectionTitle: {
+    color: '#f8fafc',
+    fontSize: 36,
+    fontWeight: '800',
+    marginBottom: 12,
+    textAlign: 'center'
   },
 
-  skillsContainer: { 
-    backgroundColor: 'rgba(30, 41, 59, 0.8)', 
-    borderRadius: 20, 
-    padding: 30, 
-    borderWidth: 1, 
-    borderColor: '#334155' 
+  aboutCardsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap'
   },
-  skillsTitle: { 
-    color: '#fff', 
-    fontSize: 24, 
-    fontWeight: '700', 
-    textAlign: 'center', 
-    marginBottom: 10 
+  aboutCard: {
+    width: width < 768 ? '100%' : '30%',
+    backgroundColor: 'rgba(30,41,59,0.8)',
+    borderRadius: 20,
+    padding: 30,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#334155',
+    alignItems: 'center'
   },
-  skillsDescription: { 
-    color: '#94a3b8', 
-    fontSize: 16, 
-    textAlign: 'center', 
-    marginBottom: 30 
+  cardPrimary: {
+    borderColor: 'rgba(59,130,246,0.3)'
   },
-  skillsGrid: { 
-    flexDirection: 'row', 
-    flexWrap: 'wrap', 
-    justifyContent: 'center' 
+  cardSecondary: {
+    borderColor: 'rgba(16,185,129,0.3)'
   },
-  skillItem: { 
-    alignItems: 'center', 
+  cardTertiary: {
+    borderColor: 'rgba(139,92,246,0.3)'
+  },
+
+  iconBackground: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 15
+  },
+  cardTitle: {
+    color: '#fff',
+    fontSize: 22,
+    fontWeight: '700',
+    marginBottom: 15,
+    textAlign: 'center'
+  },
+  cardText: {
+    color: '#cbd5e1',
+    fontSize: 15,
+    textAlign: 'center'
+  },
+
+  skillsContainer: {
+    backgroundColor: 'rgba(30, 41, 59, 0.8)',
+    borderRadius: 20,
+    padding: 30,
+    borderWidth: 1,
+    borderColor: '#334155'
+  },
+  skillsTitle: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: 10
+  },
+  skillsDescription: {
+    color: '#94a3b8',
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 30
+  },
+  skillsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center'
+  },
+  skillItem: {
+    alignItems: 'center',
     width: width < 768 ? '25%' : '16.66%', // 6 items por fila en pantallas grandes
-    marginBottom: 30, 
-    paddingHorizontal: 10 
+    marginBottom: 30,
+    paddingHorizontal: 10
   },
-  skillName: { 
-    color: '#cbd5e1', 
-    fontSize: 14, 
-    fontWeight: '600', 
-    textAlign: 'center', 
-    marginTop: 5 
+  skillName: {
+    color: '#cbd5e1',
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginTop: 5
   },
 
-  projectsContainer: { 
-    flexDirection: 'row', 
-    flexWrap: 'wrap', 
-    justifyContent: width < 768 ? 'center' : 'space-between' 
+  projectsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: width < 768 ? 'center' : 'space-between'
   },
-  projectCard: { 
-    width: width < 768 ? '100%' : '48%', 
-    backgroundColor: 'rgba(30, 41, 59, 0.8)', 
-    borderRadius: 16, 
-    padding: 25, 
-    marginBottom: 20, 
-    borderWidth: 1, 
-    borderColor: '#334155' 
+  projectCard: {
+    width: width < 768 ? '100%' : '48%',
+    backgroundColor: 'rgba(30, 41, 59, 0.8)',
+    borderRadius: 16,
+    padding: 25,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#334155'
   },
-  projectHeader: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginBottom: 15 
+  projectHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15
   },
-  projectTitle: { 
-    color: '#fff', 
-    fontSize: 20, 
-    fontWeight: '700', 
-    marginLeft: 12 
+  projectTitle: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '700',
+    marginLeft: 12
   },
-  projectDesc: { 
-    color: '#94a3b8', 
-    fontSize: 15, 
-    lineHeight: 22, 
-    marginBottom: 20 
+  projectDesc: {
+    color: '#94a3b8',
+    fontSize: 15,
+    lineHeight: 22,
+    marginBottom: 20
   },
-  projectTags: { 
-    flexDirection: 'row', 
-    flexWrap: 'wrap' 
+  carousel: {
+    marginBottom: 20,
   },
-  tag: { 
-    backgroundColor: 'rgba(59, 130, 246, 0.15)', 
-    paddingHorizontal: 12, 
-    paddingVertical: 6, 
-    borderRadius: 20, 
-    marginRight: 8, 
-    marginBottom: 8 
+  projectTags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap'
   },
-  tagText: { 
-    color: '#60a5fa', 
-    fontSize: 12, 
-    fontWeight: '600' 
+  tag: {
+    backgroundColor: 'rgba(59, 130, 246, 0.15)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    marginRight: 8,
+    marginBottom: 8
+  },
+  tagText: {
+    color: '#60a5fa',
+    fontSize: 12,
+    fontWeight: '600'
   },
   githubButton: {
     backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -739,33 +706,33 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  contactInfo: { 
-    backgroundColor: 'rgba(30, 41, 59, 0.5)', 
-    borderRadius: 16, 
-    padding: 30, 
-    marginBottom: 40, 
-    borderWidth: 1, 
-    borderColor: '#334155' 
+  contactInfo: {
+    backgroundColor: 'rgba(30, 41, 59, 0.5)',
+    borderRadius: 16,
+    padding: 30,
+    marginBottom: 40,
+    borderWidth: 1,
+    borderColor: '#334155'
   },
-  contactItem: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginBottom: 20 
+  contactItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20
   },
-  contactText: { 
-    color: '#cbd5e1', 
-    fontSize: 16, 
-    marginLeft: 15 
+  contactText: {
+    color: '#cbd5e1',
+    fontSize: 16,
+    marginLeft: 15
   },
-  fallbackIcon: { 
-    alignItems: 'center', 
+  fallbackIcon: {
+    alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#3b82f6',
     borderRadius: 20,
   },
-  fallbackText: { 
-    color: '#fff', 
-    fontSize: 20, 
-    fontWeight: 'bold' 
+  fallbackText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold'
   },
 });
