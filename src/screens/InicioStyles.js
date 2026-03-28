@@ -76,17 +76,18 @@ export const getStyles = (w, h) => StyleSheet.create({
   },
 
   buttonContainer: {
-    flexDirection: w < 768 ? 'column' : 'row',
+    flexDirection: w < 768 ? 'row' : 'row',
     marginBottom: 50,
-    alignItems: w < 768 ? 'center' : 'flex-start'
+    alignItems: 'center',
+    justifyContent: w < 768 ? 'flex-start' : 'flex-start'
   },
   primaryButton: {
     backgroundColor: '#3b82f6',
-    paddingHorizontal: w < 768 ? 24 : 32,
-    paddingVertical: 16,
+    paddingHorizontal: w < 768 ? 20 : 32,
+    paddingVertical: 14,
     borderRadius: 12,
-    marginRight: w < 768 ? 0 : 20,
-    marginBottom: w < 768 ? 15 : 0
+    marginRight: 12,
+    marginBottom: 0
   },
   buttonText: {
     color: '#fff',
@@ -110,7 +111,7 @@ export const getStyles = (w, h) => StyleSheet.create({
   socialContainer: {
     flexDirection: 'row',
     marginBottom: 60,
-    justifyContent: w < 768 ? 'center' : 'flex-start'
+    justifyContent: 'flex-start'
   },
   socialIcon: {
     width: 50,
@@ -297,12 +298,16 @@ export const getStyles = (w, h) => StyleSheet.create({
   },
 
   contactInfo: {
-    alignItems: 'center'
+    flexDirection: w < 768 ? 'column' : 'row',
+    alignItems: 'center',
+    justifyContent: w < 768 ? 'center' : 'center',
+    flexWrap: 'wrap'
   },
   contactItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: w < 768 ? 20 : 0,
+    marginRight: w < 768 ? 0 : 8,
     paddingHorizontal: 20,
     paddingVertical: 15,
     backgroundColor: 'rgba(30, 41, 59, 0.8)',
