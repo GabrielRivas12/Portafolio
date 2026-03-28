@@ -168,22 +168,26 @@ const projects = [
 export default function Inicio() {
   const scrollViewRef = useRef(null);
   const [activeSection, setActiveSection] = useState('Inicio');
+  const [sectionPositions, setSectionPositions] = useState({
+    'Inicio': 0,
+    'Sobre Mí': 0,
+    'Proyectos': 0,
+    'Contacto': 0,
+  });
   const { width, height } = useWindowDimensions();
 
   const styles = getStyles(width, height);
 
-  // Definir las posiciones de cada sección
-  const sectionPositions = {
-    'Inicio': 0,
-    'Sobre Mí': height * 0.7 + 100,
-    'Proyectos': height * 0.7 + 1100,
-    'Contacto': height * 0.7 + 1800,
+  const updateSectionPosition = (section) => (event) => {
+    const { y } = event.nativeEvent.layout;
+    setSectionPositions((prev) => ({ ...prev, [section]: y }));
   };
 
   const scrollToSection = (section) => {
     setActiveSection(section);
+    const y = sectionPositions[section] ?? 0;
     scrollViewRef.current?.scrollTo({
-      y: sectionPositions[section],
+      y,
       animated: true,
     });
   };
@@ -192,12 +196,17 @@ export default function Inicio() {
   const handleScroll = (event) => {
     const offsetY = event.nativeEvent.contentOffset.y;
 
-    // Determinar en qué sección se encuentra el usuario
-    if (offsetY < sectionPositions['Sobre Mí'] - 100) {
+    // Determinar en qué sección se encuentra el usuario usando coordenadas reales
+    const inicioY = sectionPositions['Inicio'] ?? 0;
+    const sobreMiY = sectionPositions['Sobre Mí'] ?? 0;
+    const proyectosY = sectionPositions['Proyectos'] ?? 0;
+    const contactoY = sectionPositions['Contacto'] ?? 0;
+
+    if (offsetY < sobreMiY - 40) {
       setActiveSection('Inicio');
-    } else if (offsetY < sectionPositions['Proyectos'] - 100) {
+    } else if (offsetY < proyectosY - 40) {
       setActiveSection('Sobre Mí');
-    } else if (offsetY < sectionPositions['Contacto'] - 100) {
+    } else if (offsetY < contactoY - 40) {
       setActiveSection('Proyectos');
     } else {
       setActiveSection('Contacto');
@@ -283,7 +292,7 @@ export default function Inicio() {
         scrollEventThrottle={16}
       >
         {/* Hero Section */}
-        <View style={styles.heroContainer}>
+        <View style={styles.heroContainer} onLayout={updateSectionPosition('Inicio')}>
           <Text style={styles.greeting}>Hola Mundo, Soy Gabriel</Text>
           <Text style={styles.title}>Ingeniero en Sistemas y Desarrollador Móvil y Web</Text>
           <Text style={styles.description}>
@@ -323,7 +332,7 @@ export default function Inicio() {
         </View>
 
         {/* Sobre Mí */}
-        <View style={styles.section}>
+        <View style={styles.section} onLayout={updateSectionPosition('Sobre Mí')}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionSubtitle}>Conóceme mejor</Text>
             <Text style={styles.sectionTitle}>Sobre Mí</Text>
@@ -369,7 +378,7 @@ export default function Inicio() {
         </View>
 
         {/* Proyectos */}
-        <View style={styles.section}>
+        <View style={styles.section} onLayout={updateSectionPosition('Proyectos')}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionSubtitle}>Mis trabajos recientes</Text>
             <Text style={styles.sectionTitle}>Proyectos</Text>
@@ -402,7 +411,7 @@ export default function Inicio() {
         </View>
 
         {/* Contacto */}
-        <View style={styles.section}>
+        <View style={styles.section} onLayout={updateSectionPosition('Contacto')}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionSubtitle}>Ponte en contacto</Text>
             <Text style={styles.sectionTitle}>Contacto</Text>
