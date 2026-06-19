@@ -255,6 +255,12 @@ export const getStyles = (w, h) => StyleSheet.create({
     fontWeight: '700',
     marginLeft: 12
   },
+  contributedLabel: {
+    color: '#f59e0b',
+    fontSize: 13,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
   projectDesc: {
     color: '#94a3b8',
     fontSize: w < 768 ? 14 : 15,
@@ -279,6 +285,21 @@ export const getStyles = (w, h) => StyleSheet.create({
   tagText: {
     color: '#60a5fa',
     fontSize: 12,
+    fontWeight: '600'
+  },
+  releasesButton: {
+    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+    borderWidth: 1,
+    borderColor: '#8b5cf6',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  releasesButtonText: {
+    color: '#8b5cf6',
+    fontSize: 14,
     fontWeight: '600'
   },
   githubButton: {
@@ -321,6 +342,37 @@ export const getStyles = (w, h) => StyleSheet.create({
     color: '#cbd5e1',
     fontSize: 16,
     marginLeft: 15
+  },
+
+  loadingContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 60
+  },
+  loadingText: {
+    color: '#94a3b8',
+    fontSize: 16,
+    marginTop: 15
+  },
+  errorText: {
+    color: '#ef4444',
+    fontSize: 16
+  },
+  demoButton: {
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    borderWidth: 1,
+    borderColor: '#10b981',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  demoButtonText: {
+    color: '#10b981',
+    fontSize: 14,
+    fontWeight: '600'
   },
 
   fallbackIcon: {

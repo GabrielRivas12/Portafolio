@@ -1,4 +1,4 @@
-﻿import React, { useRef, useState } from 'react';
+﻿import React, { useRef, useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   Linking,
-  Image
+  ActivityIndicator
 } from 'react-native';
 
 // Importar iconos desde archivos separados
@@ -17,13 +17,15 @@ import GithubIcon from '../components/icons/GithubIcon';
 import UserIcon from '../components/icons/UserIcon';
 import FlagIcon from '../components/icons/FlagIcon';
 import StarIcon from '../components/icons/StarIcon';
-import LaptopIcon from '../components/icons/LaptopIcon';
-import MobileIcon from '../components/icons/MobileIcon';
-import ApiIcon from '../components/icons/ApiIcon';
 
-// Importar el componente del carrusel
+// Iconos de librerías para habilidades técnicas y proyectos
+import { FaReact, FaJava, FaPython, FaHtml5, FaCss3Alt, FaGitAlt, FaAndroid, FaCode } from 'react-icons/fa6';
+import { SiJavascript, SiMysql, SiMicrosoftsqlserver, SiFirebase, SiCsharp, SiDotnet, SiTypescript, SiExpo } from 'react-icons/si';
+
 import ImageCarousel from '../components/ImageCarousel';
 import { getStyles } from './InicioStyles';
+import { GITHUB_USER, SELECTED_REPOS, CONTRIBUTED_REPOS, REPO_IMAGES } from '../config/projects';
+import { fetchUserRepos, fetchRepoByFullName, checkHasReleases, filterRepos, formatRepoToProject } from '../services/github';
 
 // Iconos sociales
 const LinkedinSocialIcon = ({ size = 24, color = "#ffffff" }) => (
@@ -38,132 +40,85 @@ const EmailSocialIcon = ({ size = 24, color = "#ffffff" }) => (
   <EmailIcon size={size} color={color} />
 );
 
-const fallbackStyles = StyleSheet.create({
-  fallbackIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#3b82f6',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  fallbackText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold'
-  }
-});
+const brandColors = {
+  'React Native': '#61DAFB',
+  'React': '#61DAFB',
+  'JavaScript': '#F7DF1E',
+  'JS': '#F7DF1E',
+  'TypeScript': '#3178C6',
+  'TS': '#3178C6',
+  'Java': '#ED8B00',
+  'Python': '#3776AB',
+  'HTML5': '#E34F26',
+  'HTML': '#E34F26',
+  'CSS3': '#1572B6',
+  'CSS': '#1572B6',
+  'MySQL': '#4479A1',
+  'SQL Server': '#CC2927',
+  'Git': '#F05032',
+  'Android': '#3DDC84',
+  'Firebase': '#FFCA28',
+  'Expo': '#fff',
+  'C#': '#239120',
+  '.NET': '#512BD4',
+};
 
 const SkillIcon = ({ name, size = 40 }) => {
-  const getSvgSource = (skillName) => {
-    switch (skillName) {
-      case 'React Native':
-      case 'React':
-        return require('../../assets/svg/react.svg');
-      case 'JavaScript':
-      case 'JS':
-        return require('../../assets/svg/js.svg');
-      case 'Java':
-        return require('../../assets/svg/java.svg');
-      case 'Python':
-        return require('../../assets/svg/python.svg');
-      case 'HTML5':
-      case 'HTML':
-        return require('../../assets/svg/html.svg');
-      case 'CSS3':
-      case 'CSS':
-        return require('../../assets/svg/css.svg');
-      case 'MySQL':
-        return require('../../assets/svg/mysql.svg');
-      case 'SQL Server':
-        return require('../../assets/svg/sqlserver.svg');
-      case 'Git':
-        return require('../../assets/svg/git.svg');
-      case 'Android':
-        return require('../../assets/svg/android.svg');
-      case 'Firebase':
-        return require('../../assets/svg/firebase.svg');
-      case 'C#':
-        return require('../../assets/svg/csharp.svg');
-      case '.NET':
-        return require('../../assets/svg/dotnet.svg');
-      default:
-        return null;
-    }
-  };
+  const IconComponent = {
+    'React Native': FaReact,
+    'React': FaReact,
+    'JavaScript': SiJavascript,
+    'JS': SiJavascript,
+    'TypeScript': SiTypescript,
+    'TS': SiTypescript,
+    'Java': FaJava,
+    'Python': FaPython,
+    'HTML5': FaHtml5,
+    'HTML': FaHtml5,
+    'CSS3': FaCss3Alt,
+    'CSS': FaCss3Alt,
+    'MySQL': SiMysql,
+    'SQL Server': SiMicrosoftsqlserver,
+    'Git': FaGitAlt,
+    'Android': FaAndroid,
+    'Firebase': SiFirebase,
+    'Expo': SiExpo,
+    'C#': SiCsharp,
+    '.NET': SiDotnet,
+  }[name];
 
-  const svgSource = getSvgSource(name);
+  const color = brandColors[name];
 
-  if (svgSource) {
-    return (
-      <Image
-        source={svgSource}
-        style={{ width: size, height: size }}
-        resizeMode="contain"
-      />
-    );
+  if (IconComponent) {
+    return <IconComponent size={size} color={color} />;
   }
 
   return (
-    <View style={[fallbackStyles.fallbackIcon, { width: size, height: size }]}> 
-      <Text style={fallbackStyles.fallbackText}>{name.charAt(0)}</Text>
+    <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: '#3b82f6', alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ color: '#fff', fontSize: size * 0.45, fontWeight: 'bold' }}>{name.charAt(0)}</Text>
     </View>
   );
 };
 
-const projects = [
-  {
-    title: 'SysControl',
-    description: 'Proyecto de gestión de inventarios y ventas con punto de venta, control de salidas de productos y generación de reportes analíticos en tiempo real.',
-    icon: <LaptopIcon />,
-    tags: ['Java', 'Swing', 'MySQL'],
-    github: 'https://github.com/GabrielRivas12/SysControl',
-    images: [
-      require('../../assets/png/SysHome.png'),
-      require('../../assets/png/SysInventario.png'),
-      require('../../assets/png/SysPunto.png'),
-      require('../../assets/png/SysExistencia.png'),
-      require('../../assets/png/SysRegistro.png'),
-    ]
-  },
-  {
-    title: 'CentralCoffee Mobile',
-    description: 'CentralCoffee es una aplicación móvil desarrollada para conectar productores y compradores de café. Los usuarios pueden explorar ofertas, visualizar perfiles, chatear, ubicar centros de acopio en el mapa y registrar la trazabilidad de su producción',
-    icon: <MobileIcon />,
-    tags: ['React Native', 'Firebase', 'Supabase', 'Teachable Machine'],
-    github: 'https://github.com/GabrielRivas12/CentralCoffee',
-    images: [
-      require('../../assets/png/detallesmovil.jpg'),
-      require('../../assets/png/IAmovil.png'),
-      require('../../assets/png/mapamovil.jpg'),
-      require('../../assets/png/ofertasmovil.jpg'),
-      require('../../assets/png/chatmovil.png'),
-      require('../../assets/png/cuentamovil.jpg'),
-    ]
-  },
-  {
-    title: 'CentralCoffee Web',
-    description: 'Plataforma web de CentralCoffee desarrollada en Python con Flask para gestionar los datos de la aplicación y acceso a herramientas de inteligencia artificial para la detección de la calidad del grano de café',
-    icon: <LaptopIcon />,
-    tags: ['Python', 'Firebase', 'Flask', 'Supabase', 'Teachable Machine'],
-    github: 'https://github.com/GabrielRivas12/CentralCoffeeWebTestPython',
-    images: [
-      require('../../assets/png/ofertasweb.png'),
-      require('../../assets/png/mapaweb.png'),
-      require('../../assets/png/chatweb.png'),
-      require('../../assets/png/IAweb.png'),
-    ]
-  },
-  {
-    title: 'Backend Hotel API',
-    description: 'API RESTful para sistema de gestión hotelera, que maneja reservas, habitaciones y clientes.',
-    icon: <ApiIcon />,
-    tags: ['C#', '.NET', 'SQL Server', 'API REST'],
-    github: 'https://github.com/GabrielRivas12/Backend_Hotel',
-    images: [
-    ]
-  },
-];
+const languageIcon = {
+  JavaScript: SiJavascript,
+  TypeScript: SiTypescript,
+  Java: FaJava,
+  Python: FaPython,
+  'C#': SiCsharp,
+  HTML: FaHtml5,
+  CSS: FaCss3Alt,
+};
+
+const languageColor = {
+  JavaScript: '#F7DF1E',
+  TypeScript: '#3178C6',
+  Java: '#ED8B00',
+  Python: '#3776AB',
+  'C#': '#239120',
+  HTML: '#E34F26',
+  CSS: '#1572B6',
+};
 
 export default function Inicio() {
   const scrollViewRef = useRef(null);
@@ -174,7 +129,38 @@ export default function Inicio() {
     'Proyectos': 0,
     'Contacto': 0,
   });
+  const [projects, setProjects] = useState([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
+  const [projectsError, setProjectsError] = useState(null);
   const { width, height } = useWindowDimensions();
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadProjects() {
+      try {
+        setProjectsLoading(true);
+        const [ownedRepos, contributedRepos] = await Promise.all([
+          fetchUserRepos(GITHUB_USER),
+          Promise.all(CONTRIBUTED_REPOS.map(fetchRepoByFullName)),
+        ]);
+        const selected = filterRepos(ownedRepos, SELECTED_REPOS);
+        const owned = selected.map(repo => formatRepoToProject(repo, REPO_IMAGES[repo.name] || []));
+        const contributed = contributedRepos.map(repo => formatRepoToProject(repo, REPO_IMAGES[repo.name] || [], true));
+        const all = [...owned, ...contributed];
+        const withReleases = await Promise.all(all.map(async p => ({
+          ...p,
+          hasReleases: await checkHasReleases({ owner: { login: p.owner }, name: p.name }),
+        })));
+        if (!cancelled) setProjects(withReleases);
+      } catch (err) {
+        if (!cancelled) setProjectsError(err.message);
+      } finally {
+        if (!cancelled) setProjectsLoading(false);
+      }
+    }
+    loadProjects();
+    return () => { cancelled = true; };
+  }, []);
 
   const styles = getStyles(width, height);
 
@@ -226,6 +212,7 @@ export default function Inicio() {
   const technicalSkills = [
     { name: 'React Native' },
     { name: 'JavaScript' },
+    { name: 'TypeScript' },
     { name: 'Java' },
     { name: 'Python' },
     { name: 'HTML5' },
@@ -235,6 +222,7 @@ export default function Inicio() {
     { name: 'Git' },
     { name: 'Android' },
     { name: 'Firebase' },
+    { name: 'Expo' },
     { name: 'C#' },
     { name: '.NET' },
   ];
@@ -384,29 +372,70 @@ export default function Inicio() {
             <Text style={styles.sectionTitle}>Proyectos</Text>
           </View>
           <View style={styles.projectsContainer}>
-            {projects.map((project, index) => (
-              <View key={index} style={styles.projectCard}>
-                <View style={styles.projectHeader}>
-                  {project.icon}
-                  <Text style={styles.projectTitle}>{project.title}</Text>
-                </View>
-                <Text style={styles.projectDesc}>{project.description}</Text>
-                <ImageCarousel images={project.images} style={styles.carousel} />
-                <View style={styles.projectTags}>
-                  {project.tags.map((tag, i) => (
-                    <View key={i} style={styles.tag}>
-                      <Text style={styles.tagText}>{tag}</Text>
-                    </View>
-                  ))}
-                </View>
-                <TouchableOpacity
-                  style={styles.githubButton}
-                  onPress={() => Linking.openURL(project.github)}
-                >
-                  <Text style={styles.githubButtonText}>Ver en GitHub</Text>
-                </TouchableOpacity>
+            {projectsLoading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#60a5fa" />
+                <Text style={styles.loadingText}>Cargando proyectos...</Text>
               </View>
-            ))}
+            ) : projectsError ? (
+              <View style={styles.loadingContainer}>
+                <Text style={styles.errorText}>Error al cargar proyectos</Text>
+              </View>
+            ) : (
+              projects.map((project, index) => {
+                const IconComp = languageIcon[project.language] || FaCode;
+                const color = languageColor[project.language] || '#60a5fa';
+                return (
+                  <View key={project.name} style={styles.projectCard}>
+                    <View style={styles.projectHeader}>
+                      <IconComp size={24} color={color} />
+                      <Text style={styles.projectTitle}>{project.title}</Text>
+                    </View>
+                    {project.isContributed && (
+                      <Text style={styles.contributedLabel}>Contribución a {project.owner}</Text>
+                    )}
+                    <Text style={styles.projectDesc}>{project.description}</Text>
+                    {project.images.length > 0 && (
+                      <ImageCarousel images={project.images} style={styles.carousel} />
+                    )}
+                    <View style={styles.projectTags}>
+                      {project.topics.map((tag, i) => (
+                        <View key={i} style={styles.tag}>
+                          <Text style={styles.tagText}>{tag}</Text>
+                        </View>
+                      ))}
+                      {project.language && (
+                        <View style={styles.tag}>
+                          <Text style={styles.tagText}>{project.language}</Text>
+                        </View>
+                      )}
+                    </View>
+                    {project.homepage && (
+                      <TouchableOpacity
+                        style={styles.demoButton}
+                        onPress={() => Linking.openURL(project.homepage)}
+                      >
+                        <Text style={styles.demoButtonText}>Ver Sitio Web</Text>
+                      </TouchableOpacity>
+                    )}
+                    {project.hasReleases && (
+                      <TouchableOpacity
+                        style={styles.releasesButton}
+                        onPress={() => Linking.openURL(`${project.html_url}/releases`)}
+                      >
+                        <Text style={styles.releasesButtonText}>Ver Release</Text>
+                      </TouchableOpacity>
+                    )}
+                    <TouchableOpacity
+                      style={styles.githubButton}
+                      onPress={() => Linking.openURL(project.html_url)}
+                    >
+                      <Text style={styles.githubButtonText}>Ver en GitHub</Text>
+                    </TouchableOpacity>
+                  </View>
+                );
+              })
+            )}
           </View>
         </View>
 
